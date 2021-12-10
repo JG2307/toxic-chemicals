@@ -3,18 +3,61 @@ Alyssa Humphreys (anh3245)
 Sergio Chavez (sc56372)
 Joelle Kenty (jck2685)
 Yunseo Chang (yc26468)
-Jennifer Garza
+Jennifer Garza (jg62768)
 Pablo Gomez
 
-Project Title: “Let's Find Toxic Chemicals!”
+# Project Title: “Let's Find Toxic Chemicals!”
 
-Project Goals: 
-	Our goal in this project is to firstly index our data so that we can properly analyze and classify connections between toxicity levels and their binary molecular fingerprint. We are using data taken from machine learning methods to identify toxicity levels in special chemicals. Because this data set essentially only consists of two variables (molecular fingerprint and experimental class of toxicity), we are going to index our data and look for any correlations. 
+## Project Goals: 
+	Our goal in this project is to first index our data so that we can properly analyze and classify connections between toxicity levels and their binary molecular fingerprint. We are using data taken from machine learning methods to identify toxicity levels in special chemicals. Because this data set essentially only consists of two variables (molecular fingerprint and experimental class of toxicity), we are going to index our data and look for any correlations. 
 Link to data: 
-http://archive.ics.uci.edu/ml/machine-learning-databases/00508/
+http://archive.ics.uci.edu/ml/machine-learning-databases/00508/ 
 
-Data Breakdown:
+## What is a binary molecular fingerprint? 
+
+![](/stor/home/jg62768/projects/toxic-chemicals/image1.png)
+
+Binary molecular fingerprints refers to the way the structure of a molecule is encoded. The fingerprint is a series of binary digits that represent the presence or absence of particular substructures in the molecule. For this project, the data frame contained 1024 different binary molecular fingerprints. 
+
+
+## Data Breakdown:
 	 This data set has a total of 1025 columns; the first 1024 reflect the binary molecular fingerprints taken from different chemicals. The last column returns the experimental class (positive or negative), which tells us whether or not the corresponding fingerprint is extremely positive or not. This dataset was used to develop classification QSAR models for the discrimination of extemely toxic or non toxic chemicals. The molecular fingerprints were calculated for sets of chemicals provided to predict acute oral systemic toxicity for filling regulatory needs
+
+```{r, echo = FALSE}
+# packages needed to prepare data
+library(tidyr)
+library(dplyr)
+library(stringr)
+
+qsar_oral_toxicity <- read.csv('qsar_oral_toxicity.csv')
+names(qsar_oral_toxicity) <- c("x1")
+OralTox2 <- as.data.frame(str_split_fixed(qsar_oral_toxicity$x1, ";", 1025))
+Unclassified <- OralTox2[-c(1025),drop=FALSE] 
+OralTox2["Sum"] <-rowSums(sapply(Unclassified[, c(1:1024)],
+                function(x) as.numeric(as.character(x))))
+
+```
+
+![Preview of Dataset](/stor/home/jg62768/projects/toxic-chemicals/graph1.png)
+
+## Exploratory Data Analysis 
+
+```{r, echo = FALSE}
+OralTox2 %>% group_by(V1025) %>% summarize(number_rows = n()) 
+ 
+barplot(table(OralTox2$V1025), col='#7CE3D8')
+
+```
+
+As seen in the model above, there is a significant difference between the proportion of non-toxic and toxic chemicals in our dataset.  More specifically, there were 8,251 non-toxic chemicals and 741 toxic chemicals, representing 92% and 8% of our dataset, respectively.  Due to this marked difference, we wanted to better understand the relationship between a chemical’s molecular footprint and its toxicity.  Thus, we came up with several hypotheses:
+
+
+#### _Hypothesis 1:_ The increased presence of biomolecular components (structures) is associated with higher toxicity levels.
+#### _Hypothesis 2:_ Certain binary molecular components are more important than others in determining toxicity levels. (An example of this might be if the 10th binary molecular component is highly correlated with toxicity).
+
+To test our first hypothesis, we added an additional column that summed up the total for each row.  We were quickly able to disprove our assumption that a higher sum would indicate a higher level of toxicity.  For instance, in the table below, we can clearly see that some negative classifications returned higher values than the positive classifications.
+
+## Analysis 
 
 References: 
 D. Ballabio, F. Grisoni, V. Consonni, R. Todeschini (2019), Integrated QSAR models to predict acute oral systemic toxicity, Molecular Informatics, 38, 180012; doi: 10.1002/minf.201800124
