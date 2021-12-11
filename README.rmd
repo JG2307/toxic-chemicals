@@ -75,6 +75,7 @@ We had difficulty with visualizing our data during the exploratory analysis proc
 
 We used a general linear regression model to better understand our data and to identify any patterns that it may have.  The goal was to determine whether the presence of any specific structures in the fingerprint carried more weight in determining toxicity levels than others (Hypothesis 2).  Using this information, we would like to then be able to make predictions about chemicals’ toxicity if given a whole new unknown dataset.  To create this model, we used a train-test split to evaluate the performance of our machine learning algorithm. 
 
+
 ![](/stor/home/jg62768/projects/toxic-chemicals/model per assessment.png)
      
 Our model was able to evaluate the dataset and make predictions on whether a molecular binary fingerprint would return positive or negative with 86.96% accuracy.  In the table below, the model was run, and although we do see that the model was pretty good at predicting the chemicals’ toxicity, it was better at accurately predicting negatives than positives.    
